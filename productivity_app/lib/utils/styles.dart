@@ -7,7 +7,9 @@ class Styles {
   static Color textColor = const Color(0xFF3B3B3B);
   static Color bgColor = Colors.white;
   static Color blueColor = const Color(0xFF005DAA);
-  static Color greenColor = const Color(0xFF6CB50D);
+  static Color greenColor = const Color.fromARGB(255, 79, 135, 6);
+  static Color redColor = const Color(0xFFDE003D);
+  static Color purpleColor = const Color(0xFF4E1882);
   static TextStyle h0 =
       TextStyle(fontSize: 16, color: textColor, fontWeight: FontWeight.w400);
   static TextStyle h1 =

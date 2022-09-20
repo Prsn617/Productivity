@@ -17,27 +17,12 @@ class _NotesState extends State<Notes> {
   @override
   void initState() {
     super.initState();
+    fetchStorage();
   }
 
   final LocalStorage storage = LocalStorage('localstorage_app');
 
-  List notes = [
-    {
-      "id": Random().nextInt(10000),
-      "title": "Food Tree System",
-      "notes": "Abcdefghi, jklm, nopqrstuvwx, yz,"
-    },
-    {
-      "id": Random().nextInt(10000),
-      "title": "No Tree System",
-      "notes": "Laayeko maya bhulaauna garo chha"
-    },
-    {
-      "id": Random().nextInt(10000),
-      "title": "Khaaney kura",
-      "notes": "Chithhi vitra raakhera pathaaudai chhu"
-    },
-  ];
+  List notes = [];
   String notess = "";
   String titles = "";
 
@@ -63,18 +48,25 @@ class _NotesState extends State<Notes> {
                       tits = value;
                     });
                   },
-                  decoration:
-                      const InputDecoration(border: OutlineInputBorder()),
+                  decoration: const InputDecoration(
+                    hintText: "Title",
+                    border: OutlineInputBorder(),
+                  ),
                 ),
+                const Gap(10),
                 TextField(
+                  maxLines: null,
+                  keyboardType: TextInputType.multiline,
                   // controller: notesCtrl,
                   onChanged: (value) {
                     setState(() {
                       nots = value;
                     });
                   },
-                  decoration:
-                      const InputDecoration(border: OutlineInputBorder()),
+                  decoration: const InputDecoration(
+                    hintText: "Your Note",
+                    border: OutlineInputBorder(),
+                  ),
                 ),
               ],
             ),
@@ -159,9 +151,29 @@ class _NotesState extends State<Notes> {
                           decoration: BoxDecoration(
                               color: Colors.grey.shade400,
                               borderRadius: BorderRadius.circular(10)),
-                          child: Text(
-                            data["title"],
-                            style: Styles.h4,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                width: 280,
+                                child: Text(
+                                  data?["title"] ?? "",
+                                  style: Styles.h4,
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    notes.remove(data);
+                                  });
+                                  addtoStorage(notes);
+                                },
+                                child: const Icon(
+                                  Icons.close,
+                                  color: Colors.red,
+                                ),
+                              )
+                            ],
                           ),
                         ),
                       ),
@@ -169,6 +181,18 @@ class _NotesState extends State<Notes> {
                     ],
                   );
                 }).toList(),
+              ),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(primary: Styles.redColor),
+                    onPressed: () {
+                      setState(() {
+                        notes.clear();
+                        addtoStorage(notes);
+                      });
+                    },
+                    child: const Text('Clear')),
               )
             ],
           )

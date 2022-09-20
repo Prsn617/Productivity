@@ -6,7 +6,7 @@ AppBar Header(context, title, bool back) {
   return AppBar(
     title: title,
     toolbarHeight: 50.0,
-    backgroundColor: Styles.greenColor,
+    backgroundColor: Styles.purpleColor,
     automaticallyImplyLeading: back,
   );
 }

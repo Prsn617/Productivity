@@ -6,7 +6,8 @@ import 'package:productivity_app/screens/pomodoro.dart';
 import 'package:productivity_app/utils/styles.dart';
 
 class BottomBar extends StatefulWidget {
-  const BottomBar({super.key});
+  final int? id;
+  const BottomBar({Key? key, this.id}) : super(key: key);
 
   @override
   State<BottomBar> createState() => _BottomBarState();
@@ -26,6 +27,8 @@ class _BottomBarState extends State<BottomBar> {
       const Pomo(),
       const More(),
     ];
+
+    _navIndex = widget.id ?? 0;
   }
 
   void onItemTapped(int indexer) {
@@ -47,7 +50,7 @@ class _BottomBarState extends State<BottomBar> {
           type: BottomNavigationBarType.fixed,
           showSelectedLabels: true,
           showUnselectedLabels: true,
-          selectedItemColor: Styles.mainColor,
+          selectedItemColor: Styles.purpleColor,
           unselectedItemColor: Colors.grey,
           items: const [
             BottomNavigationBarItem(icon: Icon(Icons.add_box), label: "To-Do"),

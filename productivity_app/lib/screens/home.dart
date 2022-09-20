@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:productivity_app/utils/header.dart';
 import 'package:gap/gap.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:productivity_app/utils/styles.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -222,7 +223,10 @@ class _HomeState extends State<Home> {
                                 borderRadius: BorderRadius.only(
                                     topRight: Radius.circular(10),
                                     bottomRight: Radius.circular(10))),
-                            child: const Icon(Icons.add),
+                            child: const Icon(
+                              Icons.add,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       )
@@ -233,6 +237,7 @@ class _HomeState extends State<Home> {
                   padding: const EdgeInsets.symmetric(horizontal: 18),
                   width: double.infinity,
                   child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(primary: Styles.redColor),
                       onPressed: () {
                         setState(() {
                           todos.clear();

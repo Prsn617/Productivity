@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:productivity_app/utils/bottom_bar.dart';
 import 'package:productivity_app/utils/header.dart';
 import 'package:gap/gap.dart';
 import 'package:productivity_app/utils/styles.dart';
@@ -46,48 +47,63 @@ class _NoteDetailState extends State<NoteDetail> {
     storage.setItem('notes', notesss);
   }
 
+  Future<bool> onBackPress() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => const BottomBar(
+                  id: 1,
+                )));
+    return Future.value(false);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: Header(context, const Text("Notes Details"), true),
-      body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          children: [
-            Column(
-              children: [
-                TextField(
-                    controller: titleCtrl,
+    return WillPopScope(
+      onWillPop: onBackPress,
+      child: Scaffold(
+        appBar: Header(context, const Text("Notes Details"), true),
+        body: SafeArea(
+          child: ListView(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            children: [
+              Column(
+                children: [
+                  TextField(
+                      controller: titleCtrl,
+                      onChanged: (value) {
+                        print(notes);
+                        setState(() {
+                          titles = value;
+                          notes
+                              .where((i) => i["id"] == noterr["id"])
+                              .toList()
+                              .forEach((j) => j["title"] = value);
+                        });
+                        addtoStorage(notes);
+                      },
+                      style: Styles.h4),
+                  const Gap(10),
+                  TextField(
+                    decoration: const InputDecoration(
+                        border:
+                            OutlineInputBorder(borderSide: BorderSide.none)),
+                    controller: notesCtrl,
                     onChanged: (value) {
                       setState(() {
-                        titles = value;
-                        notes.map((i) {
-                          i["title"] =
-                              i["id"] == noterr["id"] ? value : i["title"];
-                        });
+                        notess = value;
+                        notes = notes.map((i) {
+                          i["notes"] =
+                              i["id"] == noterr["id"] ? value : i["notes"];
+                        }).toList();
                       });
                       addtoStorage(notes);
                     },
-                    style: Styles.h4),
-                const Gap(10),
-                TextField(
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(borderSide: BorderSide.none)),
-                  controller: notesCtrl,
-                  onChanged: (value) {
-                    setState(() {
-                      notess = value;
-                      notes.map((i) {
-                        i["notes"] =
-                            i["id"] == noterr["id"] ? value : i["notes"];
-                      });
-                    });
-                    addtoStorage(notes);
-                  },
-                )
-              ],
-            )
-          ],
+                  )
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
