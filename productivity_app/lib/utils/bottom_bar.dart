@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:productivity_app/screens/home.dart';
+import 'package:productivity_app/screens/more.dart';
+import 'package:productivity_app/screens/notes.dart';
+import 'package:productivity_app/screens/pomodoro.dart';
 import 'package:productivity_app/utils/styles.dart';
 
 class BottomBar extends StatefulWidget {
@@ -19,6 +22,9 @@ class _BottomBarState extends State<BottomBar> {
     super.initState();
     _widgetOptions = <Widget>[
       const Home(),
+      const Notes(),
+      const Pomo(),
+      const More(),
     ];
   }
 

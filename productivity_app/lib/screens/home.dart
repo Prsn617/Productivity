@@ -1,7 +1,9 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:productivity_app/utils/styles.dart';
+import 'package:productivity_app/utils/header.dart';
 import 'package:gap/gap.dart';
+import 'package:localstorage/localstorage.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -14,16 +16,20 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+    fetchStorage();
     setState(() {
       tText.text = task;
     });
   }
+
+  final LocalStorage storage = LocalStorage('localstorage_app');
 
   List todos = [];
   Map<String, dynamic> todo = {};
   String task = "";
 
   TextEditingController tText = TextEditingController();
+  TextEditingController editCtrl = TextEditingController();
 
   void addTodo() {
     setState(() {
@@ -37,12 +43,77 @@ class _HomeState extends State<Home> {
     setState(() {
       task = "";
     });
+    addtoStorage(todos);
+  }
+
+  void editTodo(data) {
+    String editedValue = data["task"] ?? "";
+    setState(() {
+      editCtrl.text = data["task"];
+    });
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Edit the Task'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                TextField(
+                  controller: editCtrl,
+                  onChanged: (value) {
+                    setState(() {
+                      editedValue = value;
+                    });
+                  },
+                  decoration:
+                      const InputDecoration(border: OutlineInputBorder()),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              child: const Text('Submit'),
+              onPressed: () {
+                setState(() {
+                  data["task"] = editedValue;
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+            ElevatedButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+    addtoStorage(todos);
+  }
+
+  Future<void> addtoStorage(todooo) async {
+    storage.setItem('todos', todooo);
+    await storage.ready;
+    print(storage.getItem('todos'));
+  }
+
+  Future<void> fetchStorage() async {
+    await storage.ready;
+    var sth = await storage.getItem('todos');
+    setState(() {
+      todos = sth ?? [];
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Center(child: Text('To-Do'))),
+      appBar: Header(context, const Text("ToDo"), false),
       body: SafeArea(
         child: Column(
           children: [
@@ -56,10 +127,15 @@ class _HomeState extends State<Home> {
                       return Column(
                         children: [
                           InkWell(
+                            onLongPress: () {
+                              editTodo(data);
+                              setState(() {});
+                            },
                             onDoubleTap: () {
                               setState(() {
                                 data["completed"] = !data["completed"];
                               });
+                              addtoStorage(todos);
                             },
                             child: Container(
                               padding: const EdgeInsets.only(
@@ -68,22 +144,26 @@ class _HomeState extends State<Home> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    data["task"] ?? "Bruh",
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        color: data["completed"]
-                                            ? Colors.grey
-                                            : Colors.black,
-                                        decoration: data["completed"]
-                                            ? TextDecoration.lineThrough
-                                            : TextDecoration.none),
+                                  SizedBox(
+                                    width: 275,
+                                    child: Text(
+                                      data["task"] ?? "Bruh",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          color: data["completed"]
+                                              ? Colors.grey
+                                              : Colors.black,
+                                          decoration: data["completed"]
+                                              ? TextDecoration.lineThrough
+                                              : TextDecoration.none),
+                                    ),
                                   ),
                                   InkWell(
                                     onTap: () {
                                       setState(() {
                                         todos.remove(data);
                                       });
+                                      addtoStorage(todos);
                                     },
                                     child: const Icon(
                                       Icons.close,
@@ -156,6 +236,7 @@ class _HomeState extends State<Home> {
                       onPressed: () {
                         setState(() {
                           todos.clear();
+                          addtoStorage(todos);
                         });
                       },
                       child: const Text('Clear')),
