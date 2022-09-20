@@ -111,6 +111,34 @@ class _HomeState extends State<Home> {
     });
   }
 
+  void clearStorage() {
+    showDialog(
+        context: context,
+        builder: (BuildContext builder) {
+          return AlertDialog(
+            title: const Text("Clear Cart"),
+            content: const SingleChildScrollView(
+                child: Text("Are you sure, you want to clear the cart?")),
+            actions: <Widget>[
+              ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      todos.clear();
+                      addtoStorage(todos);
+                    });
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Yes')),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('No')),
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -238,12 +266,7 @@ class _HomeState extends State<Home> {
                   width: double.infinity,
                   child: ElevatedButton(
                       style: ElevatedButton.styleFrom(primary: Styles.redColor),
-                      onPressed: () {
-                        setState(() {
-                          todos.clear();
-                          addtoStorage(todos);
-                        });
-                      },
+                      onPressed: clearStorage,
                       child: const Text('Clear')),
                 ),
               ],

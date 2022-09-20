@@ -101,6 +101,34 @@ class _NotesState extends State<Notes> {
     );
   }
 
+  void clearStorage() {
+    showDialog(
+        context: context,
+        builder: (BuildContext builder) {
+          return AlertDialog(
+            title: const Text("Clear Cart"),
+            content: const SingleChildScrollView(
+                child: Text("Are you sure, you want to clear the cart?")),
+            actions: <Widget>[
+              ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      notes.clear();
+                      addtoStorage(notes);
+                    });
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Yes')),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('No')),
+            ],
+          );
+        });
+  }
+
   void addtoStorage(notesss) {
     storage.setItem('notes', notesss);
   }
@@ -186,12 +214,7 @@ class _NotesState extends State<Notes> {
                 width: double.infinity,
                 child: ElevatedButton(
                     style: ElevatedButton.styleFrom(primary: Styles.redColor),
-                    onPressed: () {
-                      setState(() {
-                        notes.clear();
-                        addtoStorage(notes);
-                      });
-                    },
+                    onPressed: clearStorage,
                     child: const Text('Clear')),
               )
             ],
