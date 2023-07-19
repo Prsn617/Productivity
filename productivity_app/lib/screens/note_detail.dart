@@ -63,6 +63,7 @@ class _NoteDetailState extends State<NoteDetail> {
       onWillPop: onBackPress,
       child: Scaffold(
         appBar: Header(context, const Text("Notes Details"), true),
+        backgroundColor: Colors.grey.shade100,
         body: SafeArea(
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -85,6 +86,8 @@ class _NoteDetailState extends State<NoteDetail> {
                       style: Styles.h4),
                   const Gap(10),
                   TextField(
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
                     decoration: const InputDecoration(
                         border:
                             OutlineInputBorder(borderSide: BorderSide.none)),

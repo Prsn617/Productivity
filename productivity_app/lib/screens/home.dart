@@ -116,9 +116,9 @@ class _HomeState extends State<Home> {
         context: context,
         builder: (BuildContext builder) {
           return AlertDialog(
-            title: const Text("Clear Cart"),
+            title: const Text("Clear Todos"),
             content: const SingleChildScrollView(
-                child: Text("Are you sure, you want to clear the cart?")),
+                child: Text("Are you sure, you want to clear the todos?")),
             actions: <Widget>[
               ElevatedButton(
                   onPressed: () {
@@ -143,6 +143,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: Header(context, const Text("ToDo"), false),
+      backgroundColor: Colors.grey.shade100,
       body: SafeArea(
         child: Column(
           children: [
@@ -232,8 +233,10 @@ class _HomeState extends State<Home> {
                                   task = text;
                                 });
                               },
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors.grey.shade100,
+                                border: const OutlineInputBorder(
                                     borderRadius: BorderRadius.only(
                                         topLeft: Radius.circular(10),
                                         bottomLeft: Radius.circular(10))),
@@ -246,7 +249,7 @@ class _HomeState extends State<Home> {
                           height: 50,
                           child: RawMaterialButton(
                             onPressed: addTodo,
-                            fillColor: Colors.green,
+                            fillColor: Colors.deepPurple.shade300,
                             shape: const RoundedRectangleBorder(
                                 borderRadius: BorderRadius.only(
                                     topRight: Radius.circular(10),

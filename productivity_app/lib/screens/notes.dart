@@ -106,9 +106,9 @@ class _NotesState extends State<Notes> {
         context: context,
         builder: (BuildContext builder) {
           return AlertDialog(
-            title: const Text("Clear Cart"),
+            title: const Text("Clear Notes"),
             content: const SingleChildScrollView(
-                child: Text("Are you sure, you want to clear the cart?")),
+                child: Text("Are you sure, you want to clear the notes?")),
             actions: <Widget>[
               ElevatedButton(
                   onPressed: () {
@@ -145,6 +145,7 @@ class _NotesState extends State<Notes> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: Header(context, const Text("Notes"), false),
+      backgroundColor: Colors.grey.shade100,
       floatingActionButton: FloatingActionButton(
         onPressed: addNotes,
         child: const Icon(Icons.add),
