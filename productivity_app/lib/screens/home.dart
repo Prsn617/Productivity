@@ -100,7 +100,6 @@ class _HomeState extends State<Home> {
   Future<void> addtoStorage(todooo) async {
     storage.setItem('todos', todooo);
     await storage.ready;
-    print(storage.getItem('todos'));
   }
 
   Future<void> fetchStorage() async {

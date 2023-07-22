@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:productivity_app/screens/note_detail.dart';
@@ -22,7 +24,7 @@ class _NotesState extends State<Notes> {
 
   final LocalStorage storage = LocalStorage('localstorage_app');
 
-  List notes = [];
+  List noteList = [];
   String notess = "";
   String titles = "";
 
@@ -42,7 +44,6 @@ class _NotesState extends State<Notes> {
             child: ListBody(
               children: <Widget>[
                 TextField(
-                  // controller: titleCtrl,
                   onChanged: (value) {
                     setState(() {
                       tits = value;
@@ -76,8 +77,8 @@ class _NotesState extends State<Notes> {
               child: const Text('Submit'),
               onPressed: () {
                 setState(() {
-                  notes = [
-                    ...notes,
+                  noteList = [
+                    ...noteList,
                     {
                       "id": Random().nextInt(10000),
                       "title": tits,
@@ -85,7 +86,7 @@ class _NotesState extends State<Notes> {
                     }
                   ];
                 });
-                addtoStorage(notes);
+                addtoStorage(noteList);
                 Navigator.of(context).pop();
               },
             ),
@@ -113,8 +114,8 @@ class _NotesState extends State<Notes> {
               ElevatedButton(
                   onPressed: () {
                     setState(() {
-                      notes.clear();
-                      addtoStorage(notes);
+                      noteList.clear();
+                      addtoStorage(noteList);
                     });
                     Navigator.of(context).pop();
                   },
@@ -129,15 +130,15 @@ class _NotesState extends State<Notes> {
         });
   }
 
-  void addtoStorage(notesss) {
-    storage.setItem('notes', notesss);
+  void addtoStorage(noteList) {
+    storage.setItem('notes', noteList);
   }
 
   Future<void> fetchStorage() async {
     await storage.ready;
     var a = await storage.getItem('notes');
     setState(() {
-      notes = a ?? [];
+      noteList = a ?? [];
     });
   }
 
@@ -159,7 +160,7 @@ class _NotesState extends State<Notes> {
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: notes.map<Widget>((data) {
+                children: noteList.map<Widget>((data) {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -170,7 +171,7 @@ class _NotesState extends State<Notes> {
                               MaterialPageRoute(
                                   builder: (context) => NoteDetail(
                                         noteId: data["id"],
-                                        noter: notes,
+                                        noteList: noteList,
                                       )));
                         },
                         child: Container(
@@ -193,9 +194,9 @@ class _NotesState extends State<Notes> {
                               InkWell(
                                 onTap: () {
                                   setState(() {
-                                    notes.remove(data);
+                                    noteList.remove(data);
                                   });
-                                  addtoStorage(notes);
+                                  addtoStorage(noteList);
                                 },
                                 child: const Icon(
                                   Icons.close,
@@ -211,13 +212,16 @@ class _NotesState extends State<Notes> {
                   );
                 }).toList(),
               ),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(primary: Styles.redColor),
-                    onPressed: clearStorage,
-                    child: const Text('Clear')),
-              )
+              noteList.isEmpty
+                  ? const SizedBox()
+                  : SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              primary: Styles.redColor),
+                          onPressed: clearStorage,
+                          child: const Text('Clear')),
+                    )
             ],
           )
         ],

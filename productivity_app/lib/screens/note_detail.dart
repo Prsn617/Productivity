@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:flutter/material.dart';
 import 'package:productivity_app/utils/bottom_bar.dart';
 import 'package:productivity_app/utils/header.dart';
@@ -7,8 +9,8 @@ import 'package:localstorage/localstorage.dart';
 
 class NoteDetail extends StatefulWidget {
   final int noteId;
-  final List noter;
-  const NoteDetail({Key? key, required this.noteId, required this.noter})
+  final List noteList;
+  const NoteDetail({Key? key, required this.noteId, required this.noteList})
       : super(key: key);
 
   @override
@@ -20,31 +22,31 @@ class _NoteDetailState extends State<NoteDetail> {
   void initState() {
     super.initState();
 
-    notes = widget.noter;
+    notes = widget.noteList;
     for (var i in notes) {
       if (i["id"] == widget.noteId) {
-        noterr = i;
+        currentNote = i;
       }
     }
-    titles = noterr["title"];
-    notess = noterr["notes"];
+    titleText = currentNote["title"];
+    notesText = currentNote["notes"];
 
-    titleCtrl.text = titles;
-    notesCtrl.text = notess;
+    titleCtrl.text = titleText;
+    notesCtrl.text = notesText;
   }
 
   final LocalStorage storage = LocalStorage('localstorage_app');
 
-  String titles = "";
-  String notess = "";
-  Map<String, dynamic> noterr = {};
+  String titleText = "";
+  String notesText = "";
+  Map<String, dynamic> currentNote = {};
   List notes = [];
 
   TextEditingController titleCtrl = TextEditingController();
   TextEditingController notesCtrl = TextEditingController();
 
-  void addtoStorage(notesss) {
-    storage.setItem('notes', notesss);
+  void addtoStorage(notes) {
+    storage.setItem('notes', notes);
   }
 
   Future<bool> onBackPress() {
@@ -73,11 +75,10 @@ class _NoteDetailState extends State<NoteDetail> {
                   TextField(
                       controller: titleCtrl,
                       onChanged: (value) {
-                        print(notes);
                         setState(() {
-                          titles = value;
+                          titleText = value == "" ? "Untitled" : "";
                           notes
-                              .where((i) => i["id"] == noterr["id"])
+                              .where((i) => i["id"] == currentNote["id"])
                               .toList()
                               .forEach((j) => j["title"] = value);
                         });
@@ -94,11 +95,11 @@ class _NoteDetailState extends State<NoteDetail> {
                     controller: notesCtrl,
                     onChanged: (value) {
                       setState(() {
-                        notess = value;
-                        notes = notes.map((i) {
-                          i["notes"] =
-                              i["id"] == noterr["id"] ? value : i["notes"];
-                        }).toList();
+                        notesText = value;
+                        notes
+                            .where((i) => i["id"] == currentNote["id"])
+                            .toList()
+                            .forEach((j) => j["notes"] = value);
                       });
                       addtoStorage(notes);
                     },

@@ -82,7 +82,6 @@ class _PomoState extends State<Pomo> {
         isPaused = false;
         await player.setSource(AssetSource('audios/alarm.mp3'));
         await player.resume();
-        // await player.play();
         timer.cancel();
         setState(() {
           isFocus = !isFocus;
@@ -96,7 +95,7 @@ class _PomoState extends State<Pomo> {
     _timer?.cancel();
     setState(() {
       seconds = 0;
-      minutes = 2;
+      minutes = 25;
       isPlaying = false;
       isPaused = false;
     });
